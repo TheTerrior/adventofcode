@@ -16,6 +16,7 @@ def main():
     #print(elves.index(max(elves)))
     #print(max(elves))
     elves.sort()
+    print(elves[-1])
     print(elves[-1] + elves[-2] + elves[-3])
 
 if __name__ == "__main__":
