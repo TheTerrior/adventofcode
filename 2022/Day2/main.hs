@@ -2,11 +2,6 @@ import System.IO
 import Control.Monad
 
 
-
-
-
-
-
 -- Maps a set of lines to simple tuples representing games
 linesToGames :: [String] -> [(Char,Char)]
 linesToGames = map (\[x,y,z] -> (x,z))
@@ -66,5 +61,4 @@ main = do
     let contentLines = lines contents
     print . linesToScore $ contentLines
     print . linesToScoreNew $ contentLines
-    --putStrLn contents
 
