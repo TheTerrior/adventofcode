@@ -9,7 +9,7 @@ import (
 // Convert a char into a priority
 func charToPriority(char rune) int {
 	convert := int(char) - 96
-	if convert < 0 {
+	if convert < 0 { // account for capital letters A-Z
 		convert = convert + 58
 	}
 	return convert
@@ -59,7 +59,6 @@ func main() {
 		// reset group
 		if i % 3 == 0 {
 			seenGroups = map[byte]int{}
-
 		}
 
 		// if this isn't the last one in the group
@@ -84,10 +83,8 @@ func main() {
 				}
 			}
 		}
-
 	}
 
 	fmt.Println(totalSingular)
 	fmt.Println(totalGroups)
-
 }
