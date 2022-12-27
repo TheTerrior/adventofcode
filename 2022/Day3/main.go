@@ -30,7 +30,6 @@ func main() {
 	// for each line
 	for i := 0; i < len(textLines); i++ {
 		thisLine := textLines[i]
-		fmt.Println("Line ", i)
 
 		/// Singular
 	
@@ -73,17 +72,14 @@ func main() {
 				if !seenSingular[thisLine[j]] {
 					seenSingular[thisLine[j]] = true
 					seenGroups[thisLine[j]] += 1
-					fmt.Println("Setting to seen: ", string(rune(thisLine[j])))
 				}
 			}
 		} else { // this is the last one in the group
 
 			// for each char in the line, ensure we've seen this twice
 			for j := 0; j < len(thisLine); j++ {
-				//seenSingular[thisLine[j]] = true
 				if seenGroups[thisLine[j]] == 2 {
 					totalGroups += charToPriority(rune(thisLine[j]))
-					fmt.Println("Finishing with ", string(rune(thisLine[j])))
 					break
 				}
 			}

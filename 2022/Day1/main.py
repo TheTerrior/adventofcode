@@ -13,8 +13,6 @@ def main():
         for num in splitted: #for each of the elf's numbers, push it to their index
             elves[-1] += int(num)
         
-    #print(elves.index(max(elves)))
-    #print(max(elves))
     elves.sort()
     print(elves[-1])
     print(elves[-1] + elves[-2] + elves[-3])
