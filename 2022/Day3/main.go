@@ -17,45 +17,81 @@ func charToPriority(char rune) int {
 
 // Main entry point
 func main() {
-	dat, err := os.ReadFile("input.txt")
+	data, err := os.ReadFile("input.txt") //retrieve data from input.txt
 	if err != nil {
         panic(err)
     }
 
-	text := string(dat)
-	textLines := strings.Split(text, "\n")
-
-	total := 0
+	textLines := strings.Split(string(data), "\n") //convert file to lines
+	totalSingular := 0 //keep track of all priorities for singular
+	totalGroups := 0 //keep track of all priorities for groups
+	var seenGroups map[byte]int //keeps track of chars we've seen for members of a group
 
 	// for each line
 	for i := 0; i < len(textLines); i++ {
-		seen := map[byte]bool{}
 		thisLine := textLines[i]
+		fmt.Println("Line ", i)
+
+		/// Singular
+	
+		// setup
+		seenSingular := map[byte]bool{}
 		firstHalf := thisLine[:len(thisLine) / 2]
 		secondHalf := thisLine[len(thisLine) / 2:]
 
-		// for each char in the first half
+		// for each char in the first half, remember that we've seen this char
 		for j := 0; j < len(firstHalf); j++ {
-			seen[firstHalf[j]] = true
+			seenSingular[firstHalf[j]] = true
 		}
 
-		// for each char in the second half
+		// for each char in the second half, check if we've seen this char
 		for j := 0; j < len(secondHalf); j++ {
-			if seen[secondHalf[j]] {
-				//fmt.Println("Found it: ", string(rune(secondHalf[j])), " on line ", i)
-				total += charToPriority(rune(secondHalf[j]))
+			if seenSingular[secondHalf[j]] {
+				totalSingular += charToPriority(rune(secondHalf[j]))
 				break
 			}	
 		}
 
+
+		/// Groups
+
+		seenSingular = map[byte]bool{}
+
+		// reset group
+		if i % 3 == 0 {
+			seenGroups = map[byte]int{}
+
+		}
+
+		// if this isn't the last one in the group
+		if i % 3 != 2 {
+
+			// for each char in the line, remember what we've seen so far
+			for j := 0; j < len(thisLine); j++ {
+
+				// ensure that we don't count the same char twice
+				if !seenSingular[thisLine[j]] {
+					seenSingular[thisLine[j]] = true
+					seenGroups[thisLine[j]] += 1
+					fmt.Println("Setting to seen: ", string(rune(thisLine[j])))
+				}
+			}
+		} else { // this is the last one in the group
+
+			// for each char in the line, ensure we've seen this twice
+			for j := 0; j < len(thisLine); j++ {
+				//seenSingular[thisLine[j]] = true
+				if seenGroups[thisLine[j]] == 2 {
+					totalGroups += charToPriority(rune(thisLine[j]))
+					fmt.Println("Finishing with ", string(rune(thisLine[j])))
+					break
+				}
+			}
+		}
+
 	}
 
-	fmt.Println(total)
-
-	//fmt.Println(charToPriority('a'))
-	//fmt.Println(charToPriority('z'))
-	//fmt.Println(charToPriority('A'))
-	//fmt.Println(charToPriority('Z'))
-
+	fmt.Println(totalSingular)
+	fmt.Println(totalGroups)
 
 }
