@@ -4,21 +4,37 @@ defmodule Day4 do
   """
 
   @doc """
-  Returns a bool saying if one of the two ranges fully contains the other
+  Returns converts a single line to four integers representing two ranges
   """
-  def fully_contains?(line) do
-
-    # first retrieve the raw ranges
+  def line_to_ranges(line) do
     splits = String.split(line, ",")
     ranges_str = String.split(Enum.at(splits, 0), "-") ++ String.split(Enum.at(splits, 1), "-") #as strings
-    ranges = ranges_str |> Enum.map(fn x -> Integer.parse(x) |> elem(0) end) #as integers
+    ranges_str |> Enum.map(fn x -> Integer.parse(x) |> elem(0) end) #as integers
+  end
 
+
+  @doc """
+  Returns a bool saying if one of the two ranges fully contains the other
+  """
+  def fully_contains?(ranges) do
     [elem0, elem1, elem2, elem3 | _] = ranges #extract the four into individual variables
 
     #bot0     bot1     top0     top1       bot1     bot0     top1     top0
     (elem0 <= elem2 && elem1 >= elem3) || (elem2 <= elem0 && elem3 >= elem1)
 
   end
+
+
+  @doc """
+  Returns a bool saying if the two ranges overlap
+  """
+  def overlap?(ranges) do
+    [elem0, elem1, elem2, elem3 | _] = ranges #extract the four into individual variables
+
+    #bot0     bot1     top0     bot1       bot1     bot0     top1     bot0
+    (elem0 <= elem2 && elem1 >= elem2) || (elem2 <= elem0 && elem3 >= elem0)
+  end
+
 
   @doc """
   Main entry point
@@ -35,13 +51,15 @@ defmodule Day4 do
     else
 
       # split the file into lines
-      lines = String.split(file, "\n")
+      ranges = String.split(file, "\n") |> Enum.map(&line_to_ranges/1)
 
       # filter all the lines
-      filtered = Enum.filter(lines, &fully_contains?/1)
+      contain = ranges |> Enum.filter(&fully_contains?/1)
+      overlap = ranges |> Enum.filter(&overlap?/1)
 
       # print the outputs
-      IO.puts length(filtered)
+      IO.puts length(contain)
+      IO.puts length(overlap)
 
       :ok
     end
